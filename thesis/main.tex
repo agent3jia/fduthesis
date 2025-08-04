@@ -262,9 +262,9 @@
   听觉脑干反应是一种基于电生理信号的非侵入性检测技术，广泛应用于新生儿听力筛查、神经传导路径完整性评估以及听力障碍诊断等临床场景。ABR 通过记录在特定声刺激条件下从耳蜗至脑干的神经放电响应波形，提供对听觉系统功能状态的客观评估。然而，传统的 ABR 检测方法在刺激参数设置、波形特征提取及人工解读等方面存在较大局限，容易受到噪声干扰、患者状态变化及操作者主观判断影响，导致检测效率低、准确率不稳定的问题。
   为此，本文提出了一种面向高效与高精度诊断的 ABR 分析新方法，主要包括两大关键技术模块。
 
-  首先，本文设计并实现了一种基于多通道多声强策略的 ABR 刺激增强方法，对常见刺激声类型（如点击声、调频声等）、不同声强级别（如60dB至90dB SPL）进行了系统化组合分类与实验对比，建立了多维度刺激参数对波形响应质量的影响模型。通过大量实验数据分析，我们筛选出能够最大程度激发清晰 I-V 波形、信噪比最优且响应时间最短的刺激方案，为后续深度学习模型的训练提供了高质量数据支撑。
+  首先，本文设计并实现了一种基于多通道多声强策略的 ABR 刺激增强方法，对常见刺激声类型（如点击声、调频声等）、不同声强级别（如40dB至75dB）进行了系统化组合分类与实验对比，建立了多维度刺激参数对波形响应质量的影响模型。通过大量实验数据分析，我们筛选出能够最大程度激发清晰 I-V 波形、信噪比最优且响应时间最短的刺激方案，为后续深度学习模型的训练提供了高质量数据支撑。
 
-  其次，在构建的标注精确的 ABR 数据集基础上，本文进一步提出一种结合卷积神经网络与双向长短期记忆网络的深度学习架构，充分利用 CNN 的局部特征提取能力与 BiLSTM 的时序建模优势，精准识别 ABR 信号中的关键波形特征点。该模型能够有效分离目标波形与噪声干扰，自动检测出各级波形峰值时间点，实现对 ABR 信号的快速解读与分类，极大提升了诊断的智能化水平与一致性。实验结果表明，本文所提出的整体方法在不同声强与刺激模式下均展现出优异的鲁棒性和泛化能力，检测准确率显著优于传统算法，检测时间较标准流程平均缩短约30\%以上。
+  其次，在构建的标注精确的 ABR 数据集基础上，本文进一步提出一种结合卷积神经网络与双向长短期记忆网络的深度学习架构，充分利用 CNN 的局部特征提取能力与 BiLSTM 的时序建模优势，精准识别 ABR 信号中的关键波形特征点。该模型能够有效分离目标波形与噪声干扰，自动检测出各级波形峰值时间点，实现对 ABR 信号的快速解读与分类。实验结果表明，本文所提出的整体方法在不同声强与刺激模式下均展现出优异的鲁棒性和泛化能力，检测准确率显著优于传统算法，检测时间较标准流程平均缩短约30\%以上。
 综上所述，本研究通过引入刺激优化与智能检测双重策略，为ABR诊断流程提供了一套集自动化、高效率与高精度于一体的解决方案，为临床实现更快速、准确的听力筛查与神经病理评估提供了坚实基础，也为基于深度学习的生物电信号分析研究提供了方法学借鉴。
 \end{abstract}
 
@@ -276,7 +276,7 @@
   
   The first component involves a stimulus enhancement strategy based on multi-channel and multi-intensity configurations. A systematic categorization and experimental evaluation are conducted on common stimulus types (e.g., clicks, frequency-modulated tones), varying intensity levels (e.g., 60–90 dB SPL), and stimulation modes (e.g., monaural, binaural, alternating). A multidimensional model is constructed to analyze the influence of these parameters on waveform response quality. Extensive data analysis enables the identification of optimal stimulation schemes that evoke well-defined I–V waveforms, maximize signal-to-noise ratio, and minimize response latency. These optimized parameters serve as the foundation for generating high-quality datasets for model training.
 
-  
+  \cite{valderrama2014}
   The second component builds upon a well-annotated ABR dataset to develop a deep learning architecture that combines CNN with BiLSTM networks. This architecture leverages the spatial feature extraction strengths of CNN and the temporal sequence modeling capabilities of BiLSTMs to accurately detect critical waveform components. The model effectively distinguishes target signals from background noise, automatically identifies peak latencies, and enables rapid, consistent interpretation of ABR signals. Experimental results demonstrate that this method achieves superior robustness and generalization across diverse stimulus intensities and configurations. Compared to conventional techniques, it significantly improves detection accuracy and reduces testing time by over 30\%.
 
   
