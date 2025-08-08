@@ -31,7 +31,6 @@
 %*********************************************************************
 
 \documentclass[type=master]{fduthesis}
-
 % 模板选项：
 %   type = doctor|master|bachelor  论文类型，默认为本科论文
 %   oneside|twoside                论文的单双面模式，默认为 twoside
@@ -161,7 +160,7 @@
     %            犯罪嫌疑人、被告人逃匿、死亡案件违法所得\\
     %            没收程序若干问题的规定},
     %
-    title* = {Towards Efficient and Accurate Diagnosis of Auditory Brainstem Response Signals},
+    title* =  {Towards Efficient and Accurate Diagnosis of Auditory Brainstem Response Signals},
     % 英文标题
     %
     author = {王二},
@@ -178,7 +177,7 @@
     major = {电子信息},
     % 专业
     %
-    degree = professional,
+    degree = academic,
     % 学位类型
     % 允许选项：
     %   degree = academic|professional
@@ -237,6 +236,13 @@
 
 % 需要的宏包可以自行调用
 \usepackage{physics}
+\usepackage{placeins}
+\usepackage{booktabs} % 用于美化表格线
+\usepackage{multirow} % 用于合并单元格
+\usepackage{array}
+\usepackage[export]{adjustbox}
+\usepackage{siunitx}
+\usepackage{float}
 
 % 需要的命令可以自行定义
 \newcommand{\hilbertH}{\symcal{H}}
@@ -244,7 +250,6 @@
 \newcommand{\ii}{\symrm{i}}
 
 \begin{document}
-
 % 这个命令用来关闭版心底部强制对齐，可以减少不必要的 underfull \vbox 提示，但会影响排版效果
 % \raggedbottom
 
@@ -256,34 +261,52 @@
 % 插图目录
 \listoffigures
 % 表格目录
-% \listoftables
+\listoftables
 
 \begin{abstract}
-  听觉脑干反应是一种基于电生理信号的非侵入性检测技术，广泛应用于新生儿听力筛查、神经传导路径完整性评估以及听力障碍诊断等临床场景。ABR 通过记录在特定声刺激条件下从耳蜗至脑干的神经放电响应波形，提供对听觉系统功能状态的客观评估。然而，传统的 ABR 检测方法在刺激参数设置、波形特征提取及人工解读等方面存在较大局限，容易受到噪声干扰、患者状态变化及操作者主观判断影响，导致检测效率低、准确率不稳定的问题。
+    听觉脑干反应是一种基于电生理信号的非侵入性检测技术，广泛应用于新生儿听力筛查、神经传导路径完整性评估以及听力障碍诊断等临床场景。ABR 通过记录在特定声刺激条件下从耳蜗至脑干的神经放电响应波形，提供对听觉系统功能状态的客观评估。然而，传统的 ABR 检测方法在刺激参数设置、波形特征提取及人工解读等方面存在较大局限，容易受到噪声干扰、患者状态变化及操作者主观判断影响，导致检测效率低、准确率不稳定的问题。
   为此，本文提出了一种面向高效与高精度诊断的 ABR 分析新方法，主要包括两大关键技术模块。
 
   首先，本文设计并实现了一种基于多通道多声强策略的 ABR 刺激增强方法，对常见刺激声类型（如点击声、调频声等）、不同声强级别（如40dB至75dB）进行了系统化组合分类与实验对比，建立了多维度刺激参数对波形响应质量的影响模型。通过大量实验数据分析，我们筛选出能够最大程度激发清晰 I-V 波形、信噪比最优且响应时间最短的刺激方案，为后续深度学习模型的训练提供了高质量数据支撑。
 
   其次，在构建的标注精确的 ABR 数据集基础上，本文进一步提出一种结合卷积神经网络与双向长短期记忆网络的深度学习架构，充分利用 CNN 的局部特征提取能力与 BiLSTM 的时序建模优势，精准识别 ABR 信号中的关键波形特征点。该模型能够有效分离目标波形与噪声干扰，自动检测出各级波形峰值时间点，实现对 ABR 信号的快速解读与分类。实验结果表明，本文所提出的整体方法在不同声强与刺激模式下均展现出优异的鲁棒性和泛化能力，检测准确率显著优于传统算法，检测时间较标准流程平均缩短约30\%以上。
 综上所述，本研究通过引入刺激优化与智能检测双重策略，为ABR诊断流程提供了一套集自动化、高效率与高精度于一体的解决方案，为临床实现更快速、准确的听力筛查与神经病理评估提供了坚实基础，也为基于深度学习的生物电信号分析研究提供了方法学借鉴。
+
 \end{abstract}
 
 \begin{abstract*}
-  Auditory Brainstem Response is a non-invasive diagnostic technique based on electrophysiological signals. It is widely utilized in clinical settings for newborn hearing screening, assessment of auditory neural pathway integrity, and the diagnosis of hearing disorders. By recording neural discharge waveforms from the cochlea to the brainstem under specific acoustic stimulation conditions, ABR provides an objective evaluation of auditory system function. However, traditional ABR detection methods face substantial challenges in stimulus parameter configuration, waveform feature extraction, and manual interpretation. These limitations make results highly susceptible to noise, patient condition variability, and operator subjectivity, ultimately reducing diagnostic efficiency and accuracy.
+    Auditory Brainstem Response is a non-invasive diagnostic technique based on electrophysiological signals. It is widely utilized in clinical settings for newborn hearing screening, assessment of auditory neural pathway integrity, and the diagnosis of hearing disorders. By recording neural discharge waveforms from the cochlea to the brainstem under specific acoustic stimulation conditions, ABR provides an objective evaluation of auditory system function. However, traditional ABR detection methods face substantial challenges in stimulus parameter configuration, waveform feature extraction, and manual interpretation. These limitations make results highly susceptible to noise, patient condition variability, and operator subjectivity, ultimately reducing diagnostic efficiency and accuracy.
 
   To overcome these limitations, this study introduces a novel ABR analysis framework designed to enhance both efficiency and diagnostic precision, consisting of two core technical components.
 
   
-  The first component involves a stimulus enhancement strategy based on multi-channel and multi-intensity configurations. A systematic categorization and experimental evaluation are conducted on common stimulus types (e.g., clicks, frequency-modulated tones), varying intensity levels (e.g., 60–90 dB SPL), and stimulation modes (e.g., monaural, binaural, alternating). A multidimensional model is constructed to analyze the influence of these parameters on waveform response quality. Extensive data analysis enables the identification of optimal stimulation schemes that evoke well-defined I–V waveforms, maximize signal-to-noise ratio, and minimize response latency. These optimized parameters serve as the foundation for generating high-quality datasets for model training.
+  The first component involves a stimulus enhancement strategy based on multi-channel and multi-intensity configurations. A systematic categorization and experimental evaluation are conducted on common stimulus types (e.g., clicks, frequency-modulated tones), varying intensity levels (e.g., 40–75 dB ), and stimulation modes (e.g., monaural, binaural, alternating). A multidimensional model is constructed to analyze the influence of these parameters on waveform response quality. Extensive data analysis enables the identification of optimal stimulation schemes that evoke well-defined I–V waveforms, maximize signal-to-noise ratio, and minimize response latency. These optimized parameters serve as the foundation for generating high-quality datasets for model training.
 
-  \cite{valderrama2014}
   The second component builds upon a well-annotated ABR dataset to develop a deep learning architecture that combines CNN with BiLSTM networks. This architecture leverages the spatial feature extraction strengths of CNN and the temporal sequence modeling capabilities of BiLSTMs to accurately detect critical waveform components. The model effectively distinguishes target signals from background noise, automatically identifies peak latencies, and enables rapid, consistent interpretation of ABR signals. Experimental results demonstrate that this method achieves superior robustness and generalization across diverse stimulus intensities and configurations. Compared to conventional techniques, it significantly improves detection accuracy and reduces testing time by over 30\%.
 
   
   In Summary, This research presents an integrated solution that combines optimized stimulation strategies with intelligent waveform recognition, offering a comprehensive, automated, and highly accurate approach to ABR diagnosis. It not only enhances clinical efficiency and reliability in hearing screening and neuropathological evaluation but also provides a methodological reference for applying deep learning to the analysis of bioelectrical signals.
-  
-  \end{abstract*}
 
+\end{abstract*}
+
+% 符号表
+% 语法与 LaTeX 表格一致：列用 & 区分，行用 \\ 区分
+% 如需修改格式，可以使用可选参数：
+%   \begin{notation}[ll]
+%     $x$ & 坐标 \\
+%     $p$ & 动量
+%   \end{notation}
+% 可选参数与 LaTeX 标准表格的列格式说明语法一致
+% 这里的 “ll” 表示两列均为自动宽度，并且左对齐
+
+% \begin{notation}[ll]
+%   $x$                  & 坐标        \\
+%   $p$                  & 动量        \\
+%   $\psi(x)$            & 波函数      \\
+%   $\bra{x}$            & 左矢（bra） \\
+%   $\ket{x}$            & 右矢（ket） \\
+%   $\ip{\alpha}{\beta}$ & 内积        \\
+% \end{notation}
 
 % 主体部分是论文的核心
 \mainmatter
@@ -294,93 +317,12 @@
 %   \include{chapter2}
 %   \include{chapter3}
 
-\include{chapter1}
-% \chapter{介绍}
+\include{chapter1-introduction}
+\include{chapter2-relatedWorks}
+\include{chapter3-multiple-stimulous}
+\include{chapter4-deeplearning}
+\include{chatper5-conclusion}
 
-% \strong{量子力学}是物理学的分支学科。它主要描写微观的事物，与相对论一起被认为是现代物理学的两大
-% 基本支柱，许多物理学理论和科学，如原子物理学、固体物理学、核物理学和粒子物理学以及其它相关的学科，
-% 都是以其为基础\cite{曾谨言2013量子力学,feynman2011feynman}。
-
-% \section{量子力学历史概要}
-
-% \section{研究对象}
-
-% \section{研究方法}
-
-% \chapter{数学基础}
-
-% \section{基础公设}
-
-整个量子力学的数学理论可以建立于五个基础公设。这些公设不能被严格推导出来的，而是从实验结果仔细分析
-归纳总结而得到的。从这五个公设，可以推导出整个量子力学。假若量子力学的理论结果不符合实验结果，
-则必须将这些基础公设加以修改，直到没有任何不符合之处。至今为止，量子力学已被实验核对至极高准确度，
-还没有找到任何与理论不符合的实验结果，虽然有些理论很难直觉地用经典物理的概念来理解，例如，波粒
-二象性、量子纠缠等等\cite{zurek2014quantum,cohen2013claude,zettili2003quantum}。
-
-\begin{enumerate}
-  \item 量子态公设：量子系统在任意时刻的状态（量子态）可以由希尔伯特空间 $\hilbertH$ 中的态矢量
-    $\ket{\psi}$ 来设定，这态矢量完备地给出了这量子系统的所有信息。这公设意味着量子系统遵守%
-    \emph{态叠加原理}，假若 $\ket*{\psi_1}$、$\ket*{\psi_2}$ 属于希尔伯特空间 $\hilbertH$，则
-    $c_1\ket*{\psi_1} + c_2\ket*{\psi_2}$ 也属于希尔伯特空间 $\hilbertH$。
-  \item 时间演化公设： 态矢量为 $\ket{\psi(t)}$ 的量子系统，其动力学演化可以用薛定谔方程表示：
-    \begin{equation}
-      \ii\hbar \pdv{t} \ket{\psi(t)} = \hat{H} \ket{\psi(t)}.
-    \end{equation}
-    其中，哈密顿算符 $\hat{H}$ 对应于量子系统的总能量，$\hbar$ 是约化普朗克常数。根据薛定谔方程，
-    假设时间从 $t_0$ 变化到 $t$，则态矢量从 $\ket*{\psi(t_0)}$ 演化到 $\ket{\psi(t)}$，该过程以
-    方程表示为
-    \begin{equation}
-      \ket{\psi(t)} = \hat{U}(t,\,t_0) \ket*{\psi(t_0)}.
-    \end{equation}
-    其中 $\hat{U}(t,\,t_0) = \ee^{-\ii\hat{H}(t-t_0) / \hbar}$ 是时间演化算符。
-  \item 可观察量公设：每个可观察量 $A$ 都有其对应的厄米算符 $\hat{A}$，而算符 $\hat{A}$ 的所有
-    本征矢量共同组成一个完备基底。
-  \item 坍缩公设：对于量子系统测量某个可观察量 $A$ 的过程，可以数学表示为将对应的厄米算符
-    $\hat{A}$ 作用于量子系统的态矢量 $\ket{\psi}$，测量值只能为厄米算符 $\hat{A}$ 的本征值。
-    在测量后，假设测量值为 $a_i$，则量子系统的量子态立刻会坍缩为对应于本征值 $a_i$ 的本征态
-    $\ket*{e_i}$。
-  \item 波恩公设：对于这测量，获得本征值 $a_i$ 的概率为量子态 $\ket{\psi}$ 处于本征态 $\ket*{e_i}$
-    的概率幅的绝对值平方。\footnote{%
-      使用可观察量 $A$ 的基底 $\qty{e_1,\,e_2,\,\ldots,\,e_n}$，量子态 $\ket{\psi}$ 可以表示为
-      $\ket{\psi} = \sum_j c_j \ket*{e_j}$，其中 $c_j$ 是量子态 $\ket{\psi}$ 处于本征态
-      $\ket*{e_j}$ 的概率幅。根据波恩定则，对于此次测量，获得本征值 $a_i$ 的概率为
-      $\abs*{\ip*{e_i}{\psi}}^2 = \abs*{c_i}^2$。}
-\end{enumerate}
-
-\section{量子态与量子算符}
-
-量子态指的是量子系统的状态，态矢量可以用来抽象地表现量子态。采用狄拉克标记，态矢量表示为右矢
-$\ket{\psi}$；其中，在符号内部的希腊字母 $\psi$ 可以是任何符号、字母、数字，或单字。例如，
-沿着磁场方向测量电子的自旋，得到的结果可以是上旋或是下旋，分别标记为 $\ket{\uparrow}$ 和
-$\ket{\downarrow}$。
-
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=0.5\textwidth]{example-image.png}
-  \caption[施特恩—格拉赫实验]{%
-    设定施特恩—格拉赫实验仪器的磁场方向为 $z$-轴，入射的银原子束可以被分裂成两道银原子束，每一道
-    银原子束代表一种量子态，上旋 $\ket{\uparrow}$ 或下旋 $\ket{\downarrow}$%
-    \cite{wikimedia:stern-gerlach-experiment}。}
-  \label{fig:stern-gerlach-experiment}
-\end{figure}
-
-对量子态做操作定义，量子态可以从一系列制备程序来辨认，即这程序所制成的量子系统拥有这量子态。例如，
-使用施特恩—格拉赫实验仪器，设定磁场朝着 $z$-轴方向，如图~\ref{fig:stern-gerlach-experiment} 所示，
-可以将入射的银原子束，依照自旋的 $z$-分量分裂成两道，一道为上旋，量子态为 $\ket{\uparrow}$；另一道
-为下旋，量子态为 $\ket{\downarrow}$，这样，可以制备成量子态为 $\ket{\uparrow}$ 的银原子束，或量子态
-为 $\ket{\downarrow}$ 的银原子束。原本银原子束的态矢量可以按照态叠加原理表示为
-\begin{equation}
-  \ket{\psi} = \alpha \ket{\uparrow} + \beta \ket{\downarrow}.
-\end{equation}
-其中，$\alpha$、$\beta$ 是复值系数，$\abs{\alpha}^2$、$\abs{\beta}^2$ 分别为入射银原子束处于上旋、
-下旋的概率，且有
-\begin{equation}
-  \abs{\alpha}^2 + \abs{\beta}^2 = 1.
-\end{equation}
-
-\section{动力学演化}
-
-\chapter{总结与展望}
 
 % 附录部分
 \appendix

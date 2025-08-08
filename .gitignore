@@ -27,11 +27,22 @@
 *.thm
 *.toc
 
+# Generated files (plain text)
+*.cls
+*.def
+*.ins
+*.sty
+
+# Generated files (binary)
+*.dvi
+*.pdf
+*.xdv
+
 # Folders
 .vscode/
 build/
 release/
-
+thesis/
 
 # Other
 .DS_Store
